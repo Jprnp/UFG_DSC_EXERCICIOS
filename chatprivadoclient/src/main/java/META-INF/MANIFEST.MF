@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.github.jprnp.dsc20191.chatprivado.client.Main
+

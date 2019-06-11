@@ -22,13 +22,13 @@ public class Main {
             PrintStream stream = new PrintStream(client.getOutputStream());
             stream.println(nick);	
 
-			(new Thread(new Receiver(client)).start();
+			new Thread(new Receiver(client)).start();
 
             while(true) {
                 stream.println(scanner.nextLine());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Conexão com o servidor não alcançada.");
         }
     }
 }

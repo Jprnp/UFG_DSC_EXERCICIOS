@@ -1,5 +1,10 @@
 package com.github.jprnp.dsc20191.chatprivado.client;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
 public class Receiver implements Runnable {
 	
 	private Socket client;
@@ -10,11 +15,15 @@ public class Receiver implements Runnable {
 		this.client = client;
 		this.entrada = new Scanner(this.client.getInputStream());
 	}
-	
-	@Override
+
 	public void run() {
 		while(true) {
-			System.out.println(this.entrada.nextLine());
+			try {
+				System.out.println(this.entrada.nextLine());
+			} catch (NoSuchElementException e) {
+				System.out.println("Conexão com o servidor encerrada.");
+				break;
+			}
 		}
 	}
 }

@@ -16,12 +16,12 @@ public class Server {
     public static void main(String[] args) {
         try {
             serverSocket = new ServerSocket(PORT);
-            System.out.println("Servidor rodando na porta " + PORT );
+            System.out.println("Servidor rodando na porta " + PORT);
         } catch (IOException e) {
             System.out.println("Erro ao criar server socker");
         }
 
-        while(true) {
+        while (true) {
             try {
                 Socket client = serverSocket.accept();
                 System.out.println("Cliente conectado -> host " + client.getInetAddress().getHostName());
