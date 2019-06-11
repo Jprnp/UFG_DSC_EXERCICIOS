@@ -11,6 +11,8 @@ public class Conexao implements Runnable {
 	public static final String COLON = ":";
 
     public static final String COMMA = ",";
+	
+	public static final String SEND_TO_ALL = "*";
 
     public static final String COMMAND = "command";
 
@@ -59,13 +61,18 @@ public class Conexao implements Runnable {
 
     private void parseLine(String linha) throws IOException {
         String split[];
+		
+		split = linha.split(Conexao.COLON);
 
         if (!linha.contains(Conexao.COLON)) {
             this.sendToAll(linha);
             return;
-        }
-
-        split = linha.split(Conexao.COLON);
+        }        
+		
+		if (split[0].equals(Conexao.SEND_TO_ALL) && split.length > 1) {
+			this.sendToAll(split[1]);
+			return;
+		}
 
         if (split[0].equals(Conexao.COMMAND)) {
             this.executeCommand(split[1]);
