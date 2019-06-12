@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+		//Receber informações de conexão ao servidor
         Scanner scanner = new Scanner(System.in);
         System.out.println("Informar IP do servidor:");
         String ip = scanner.nextLine();
@@ -18,12 +19,17 @@ public class Main {
         String nick = scanner.nextLine();
 
         try {
+			//Realiza conexão ao servidor
             Socket client = new Socket(ip, porta);
+			//Captura instância p/ envio de mensagens ao servidor
             PrintStream stream = new PrintStream(client.getOutputStream());
+			//Enviar nickname ao servidor
             stream.println(nick);	
 
+			//Thread p/ recebimento de mensagens do servidor
 			new Thread(new Receiver(client)).start();
 
+			//Envia mensagens ao servidor até que a conexão seja interrompida
             while(true) {
                 stream.println(scanner.nextLine());
             }
