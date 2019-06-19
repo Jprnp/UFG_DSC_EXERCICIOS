@@ -1,4 +1,11 @@
-public class ConnectionTester implements Runnable {
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Vector;
+import java.util.concurrent.Callable;
+
+public class ConnectionTester implements Callable {
 
     private short ipSlot1;
 
@@ -12,11 +19,11 @@ public class ConnectionTester implements Runnable {
 
     private long totalQuantity;
 
-    public ConnectionTester(long inicio, long fim, long totalQuantity) {
-        System.out.println("Nova instância");
+    private Vector<String> reachableIps = new Vector<String>();
+
+    public ConnectionTester(long begin, long end, long totalQuantity) {
         this.totalQuantity = totalQuantity;
-        this.initializeIp(inicio);
-        System.out.println("IP inicializado: " + this.ipAsString());
+        this.initializeIp(begin);
     }
 
     private String ipAsString() {
@@ -74,16 +81,46 @@ public class ConnectionTester implements Runnable {
     }
 
     private void initializeIp(long steps) {
-        while (this.nextIpInit(steps)) {
-        }
-
-        this.stepsTaken = 0;
+        this.ipSlot1 = (short) ((steps >> 24) & 0xFF);
+        this.ipSlot2 = (short) ((steps >> 16) & 0xFF);
+        this.ipSlot3 = (short) ((steps >> 8) & 0xFF);
+        this.ipSlot4 = (short) (steps & 0xFF);
     }
 
-    public void run() {
+    private long isReachable(String hostAddress) {
+        InetAddress inetAddress = null;
+        Date start, stop;
+        try {
+            inetAddress = InetAddress.getByName(hostAddress);
+        } catch (UnknownHostException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+        try {
+            start = new Date();
+            if (inetAddress.isReachable(5000)) {
+                stop = new Date();
+                return (stop.getTime() - start.getTime());
+            }
+        } catch (IOException e1) {
+            System.out.println("Erro: " + e1.getMessage());
+        } catch (IllegalArgumentException e1) {
+            System.out.println("Timeout inválido:" + e1.getMessage());
+        }
+        return -1; // para indicar erro
+    }
+
+    public Vector<String> getReachableIps() {
+        return this.reachableIps;
+    }
+
+    public Vector<String> call() throws Exception {
         do {
-            System.out.println(this.ipAsString());
-            // TODO: Verificar Conexão / Adicionar na lista os válidos
+            System.out.println("Testando: " + this.ipAsString());
+            if (this.isReachable(this.ipAsString()) != -1) {
+                this.reachableIps.add(this.ipAsString());
+            }
         } while (this.nextIp());
+
+        return this.reachableIps;
     }
 }
