@@ -60,7 +60,7 @@ public class Connection implements Runnable {
                 quantityPerThread+= remainder;
             }
 
-            ConnectionTester tester = new ConnectionTester(begin, begin + quantityPerThread, quantityPerThread);
+            ConnectionTester tester = new ConnectionTester(begin, quantityPerThread);
             futures.add(executor.submit(tester));
             begin += quantityPerThread;
         }

@@ -21,7 +21,7 @@ public class ConnectionTester implements Callable {
 
     private Vector<String> reachableIps = new Vector<String>();
 
-    public ConnectionTester(long begin, long end, long totalQuantity) {
+    public ConnectionTester(long begin, long totalQuantity) {
         this.totalQuantity = totalQuantity;
         this.initializeIp(begin);
     }
@@ -32,15 +32,6 @@ public class ConnectionTester implements Callable {
 
     private boolean nextIp() {
         if (this.stepsTaken == this.totalQuantity - 1) {
-            return false;
-        }
-
-        this.addOneToIp();
-        return true;
-    }
-
-    private boolean nextIpInit(long totalSteps) {
-        if (this.stepsTaken == totalSteps - 1) {
             return false;
         }
 
@@ -107,10 +98,6 @@ public class ConnectionTester implements Callable {
             System.out.println("Timeout inválido:" + e1.getMessage());
         }
         return -1; // para indicar erro
-    }
-
-    public Vector<String> getReachableIps() {
-        return this.reachableIps;
     }
 
     public Vector<String> call() throws Exception {
